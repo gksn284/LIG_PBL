@@ -1,0 +1,7 @@
+[STM32] 3. STM32 개발환경 구축하기(STM32CubeIDE 설치하기)
+ - https://naver.me/GMvRlIs9
+
+STM32F4 속성 강의
+https://youtu.be/myo3aTcLxzM
+
+유투브 강좌는 gpio, 수신인터럽트, spi, i2c 위주로 보고, 시간되면 나머지도 한번 보기
