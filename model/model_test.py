@@ -5,13 +5,6 @@ import time
 import numpy as np
 from matplotlib import pyplot as plt
 from keras.models import load_model
-from keras.models import Sequential
-from keras.layers import Dense
-from keras.layers import Flatten
-from keras.layers.convolutional import Conv2D
-from keras.layers.convolutional import MaxPooling2D
-from keras.preprocessing import image
-from keras.preprocessing.image import ImageDataGenerator
 
 
 CAM_ID = 0      # camid 설정
@@ -19,7 +12,7 @@ CAM_ID = 0      # camid 설정
 
 '''opencv로 화면 출력 저장, resize하기 캡쳐 함수'''
 def capture(camid = CAM_ID):
-    start = time.time()
+    #start = time.time()
     #cam = cv.VideoCapture(camid, cv.CoAP_DSHOW)            #현재 컴퓨터에 연결된 메인 카메라 불러오기      
     cam = cv.VideoCapture(camid)
     if cam.isOpened() == False:
@@ -30,33 +23,24 @@ def capture(camid = CAM_ID):
     if ret == 0:                            # 읽음 실패시 프린트하기.
         print ('frame is not exist')
         return None
+    
+    cv.imwrite('640image.png',img, params=[cv.IMWRITE_PNG_COMPRESSION,0])   # 640 x 480 이미지 저장
     resize_img = cv.resize(img, (24,24))    #24 x 24로 사이즈 줄이기
-    resize_img_gray = cv.cvtColor(resize_img, cv.COLOR_BGR2GRAY)
-    cv.imwrite('test.png',img, params=[cv.IMWRITE_PNG_COMPRESSION,0])
+    resize_img_gray = cv.cvtColor(resize_img, cv.COLOR_BGR2GRAY)    # 흑백으로 변환
     
-    
-    # 사진 배경 흰색으로 만들기 위한 2중 for문 -> 배경 강제로 하얗게 만들기
-    for i in range(24):         
-        for j in range(24):  
-            if resize_img_gray[i][j] > 130:         
-                resize_img_gray[i][j] = 255     
-                                    
-    #print(resize_img_gray)                 # 출력 테스트
-    cv.imwrite('test2.png',resize_img_gray, params=[cv.IMWRITE_PNG_COMPRESSION,0])   # 사진 저장
-    #cv.imshow("resize_img", img)
-    end = time.time()
+    # 사진 배경 흰색으로 만들기 위한 코드(ndarray에서 변경) 배경 강제로 하얗게 만들기
+    resize_img_gray[resize_img_gray>100] = 255
+    #cv.imwrite('24image_gray.png',resize_img_gray, params=[cv.IMWRITE_PNG_COMPRESSION,0])
+    #end = time.time()
     #plt.imshow(resize_img_gray, cmap='gray')   # matplotlib으로 화면 송출, 0일수록 검정, 255일수록 하양
     #plt.show()
 
     cam.release()   # 카메라 동적할당 해제
-
-    print("opencv time: %f sec" %(end - start))
+    #print("opencv time: %f sec" %(end - start))
     return resize_img
     
 
-               
-
-  
+            
 ''' main '''
 
 model = load_model('lig_model.h5')  # 모델 불러오기
@@ -81,7 +65,7 @@ while(True):
         pred = model.predict(input_arr)                                             # 예측하기
         #np.set_printoptions(formatter={'float': lambda x: "{0:0.3f}".format(x)})    # x당 0.3f씩만 -> 있어도 되고 없어도 되는 줄
 
-        classes = ['circle', 'square', 'triangle']        # 라벨들
+        classes = ['circle', 'star', 'triangle']        # 라벨들
 
         ''' 출력   '''
         #print(pred)                                    # 인덱스만 출력하고 싶을때 이 줄 사용
