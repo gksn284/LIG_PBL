@@ -1,16 +1,10 @@
 # -*- coding: utf-8 -*-
 import cv2 as cv
-import time
 import numpy as np
+import time
 from matplotlib import pyplot as plt
 from keras.models import load_model
-from keras.models import Sequential
-from keras.layers import Dense
-from keras.layers import Flatten
-from keras.layers.convolutional import Conv2D
-from keras.layers.convolutional import MaxPooling2D
-from keras.preprocessing import image
-from keras.preprocessing.image import ImageDataGenerator
+
 
 
 CAM_ID = 0      # camid 설정
@@ -21,6 +15,7 @@ CAM_ID = 0      # camid 설정
     
     
 
+
                
 
   
@@ -30,7 +25,8 @@ model = load_model('lig_model.h5')  # 모델 불러오기
 
 # while문 돌리기
 print("################# model start #######################")
-k = 18
+k = 160
+
 while(True):
     #i = 1
     
@@ -51,19 +47,15 @@ while(True):
         if ret == 0:                            # 읽음 실패시 프린트하기.
             print ('frame is not exist')
     
-        resize_img = cv.resize(img, (24,24))    #24 x 24로 사이즈 줄이기
+        resize_img = cv.resize(img, (28,28))    #24 x 24로 사이즈 줄이기
         resize_img_gray = cv.cvtColor(resize_img, cv.COLOR_BGR2GRAY)
         
         cv.imwrite('test.png',img, params=[cv.IMWRITE_PNG_COMPRESSION,0])
         
         
         # 사진 배경 흰색으로 만들기 위한 2중 for문 -> 배경 강제로 하얗게 만들기
-        for i in range(24):         
-            for j in range(24):  
-                if resize_img_gray[i][j] > 100:         
-                    resize_img_gray[i][j] = 255     
-                                        
-        #print(resize_img_gray)
+        ret2, resize_img_gray= cv.threshold(resize_img_gray, 40, 255, cv.THRESH_BINARY+cv.THRESH_OTSU)    
+        # resize_img_gray[resize_img_gray>100] = 255      # ndarray배열에서 바로 줄이는 방법
          
         
         print(k)
@@ -71,24 +63,16 @@ while(True):
          
                          # 출력 테스트
         cv.imwrite(name, resize_img_gray, params=[cv.IMWRITE_PNG_COMPRESSION,0])   # 사진 저장
+        # print(resize_img_gray)
         #cv.imshow("resize_img", img)
         end = time.time()
         #plt.imshow(resize_img_gray, cmap='gray')   # matplotlib으로 화면 송출, 0일수록 검정, 255일수록 하양
         #plt.show()
-
         cam.release()   # 카메라 동적할당 해제
 
         print("opencv time: %f sec" %(end - start))
-        
-            
-            
-            #current_img  = cv.imread(current_img)                       # opencv로 이미지 로드하기
-            #input_arr = tf.keras.utils.img_to_array(current_img)                                       # 이미지 넘파이 배열로 바꾸기? 근데 필요없음.
-            
-            #np.set_printoptions(formatter={'float': lambda x: "{0:0.3f}".format(x)})    # x당 0.3f씩만 -> 있어도 되고 없어도 되는 줄
-
-            
-
+            #input_arr = tf.keras.utils.img_to_array(current_img)                                       # 이미지 넘파이 배열로 바꾸기? 근데 필요없음.   
+        np.set_printoptions(formatter={'float': lambda x: "{0:0.3f}".format(x)})    # x당 0.3f씩만 -> 있어도 되고 없어도 되는 줄
         plt.imshow(resize_img_gray, cmap='gray')                    # matplotlib으로 화면 송출, 0일수록 검정, 255일수록 하양
         plt.show()
         
