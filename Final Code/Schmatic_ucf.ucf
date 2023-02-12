@@ -1,0 +1,26 @@
+# PlanAhead Generated IO constraints 
+
+NET "clk" IOSTANDARD = LVCMOS33;
+NET "motor_1" IOSTANDARD = LVCMOS33;
+NET "motor_2" IOSTANDARD = LVCMOS33;
+NET "motor_3" IOSTANDARD = LVCMOS33;
+NET "motor_4" IOSTANDARD = LVCMOS33;
+NET "motor_5" IOSTANDARD = LVCMOS33;
+NET "step_motor" IOSTANDARD = LVCMOS33;
+NET "stepin" IOSTANDARD = LVCMOS33;
+NET "dirpin" IOSTANDARD = LVCMOS33;
+NET "rxd" IOSTANDARD = LVCMOS33;
+NET "txd" IOSTANDARD = LVCMOS33;
+
+# PlanAhead Generated physical constraints 
+NET "clk" LOC = B8;
+NET "motor_1" LOC = A10;
+NET "motor_2" LOC = C13;
+NET "motor_3" LOC = A13;
+NET "motor_4" LOC = B9;
+NET "motor_5" LOC = A9;
+NET "step_motor" LOC = C6;
+NET "stepin" LOC = B7;
+NET "dirpin" LOC = C5;
+NET "rxd" LOC = B5;
+NET "txd" LOC = B6;
